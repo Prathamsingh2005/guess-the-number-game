@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Number Game - 2 Player</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f9; /* Light gray background */
+            margin: 0;
+            color: #333;
+        }
+        .game-container {
+            text-align: center;
+            background-color: #ffffff; /* White background for the game container */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            max-width: 90%;
+            transition: transform 0.3s ease-in-out;
+        }
+        .game-container:hover {
+            transform: scale(1.05);
+        }
+        h1 {
+            color: #FF6F61;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        input {
+            padding: 12px;
+            font-size: 18px;
+            width: 70%;
+            margin: 10px 0;
+            border: 2px solid #FF6F61;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #FF8A00;
+        }
+        button {
+            padding: 12px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #FF6F61;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            width: 70%;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #FF8A00;
+            transform: scale(1.1);
+        }
+        button:active {
+            transform: scale(1);
+        }
+        .message {
+            font-size: 1.1rem;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.1); /* Slightly transparent background */
+            border-radius: 5px;
+        }
+        .result {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #FF8A00;
+        }
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>Guess the Number Game - 2 Player</h1>
+    <p>Guess a number between 1 and 100</p>
+    <p id="currentPlayerMessage">Player 1's turn</p>
+    <input type="number" id="guessInput" placeholder="Enter your guess" min="1" max="100">
+    <button onclick="checkGuess()">Submit Guess</button>
+    <p class="message" id="message"></p>
+    <p class="result" id="result"></p>
+</div>
+
+<div class="footer">
+    <p>Made with ❤️ by Pratham Singh</p>
+</div>
+
+<script>
+    // Random number for the game
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    let numberOfGuesses = 0;
+    let currentPlayer = 1;
+
+    // Update the player turn message
+    function updateTurnMessage() {
+        const playerMessage = document.getElementById('currentPlayerMessage');
+        playerMessage.textContent = `Player ${currentPlayer}'s turn`;
+    }
+
+    // Function to check the guessed number
+    function checkGuess() {
+        const guessed = parseInt(document.getElementById('guessInput').value);
+        numberOfGuesses++;
+        const messageElement = document.getElementById('message');
+        const resultElement = document.getElementById('result');
+
+        // Check if the guess is valid
+        if (isNaN(guessed) || guessed < 1 || guessed > 100) {
+            messageElement.textContent = "Please enter a valid number between 1 and 100.";
+            messageElement.style.backgroundColor = "#FF6347";
+            return;
+        }
+
+        // Compare the guess with the random number
+        if (guessed > randomNumber) {
+            messageElement.textContent = "Lower number please!";
+            messageElement.style.backgroundColor = "#FF6347";
+        } else if (guessed < randomNumber) {
+            messageElement.textContent = "Higher number please!";
+            messageElement.style.backgroundColor = "#FF6347";
+        } else {
+            messageElement.textContent = `Player ${currentPlayer} wins! Congratulations!`;
+            messageElement.style.backgroundColor = "#32CD32";
+            resultElement.textContent = `It took ${numberOfGuesses} guesses to find the number ${randomNumber}.`;
+            return;
+        }
+
+        // Switch players after each guess
+        currentPlayer = currentPlayer === 1 ? 2 : 1;
+        updateTurnMessage();
+        document.getElementById('guessInput').value = ''; // Clear input field
+    }
+
+    // Allow pressing "Enter" to submit the guess
+    document.getElementById('guessInput').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            checkGuess();
+        }
+    });
+
+    // Initialize the game with Player 1's turn
+    updateTurnMessage();
+
+</script>
+
+</body>
+</html>
